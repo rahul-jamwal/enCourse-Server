@@ -33,35 +33,39 @@ export const buySubscription = catchAsyncError(async (req, res, next) => {
 
 
 export const paymentVerification = catchAsyncError(async (req, res, next) => {
+    const { razorpay_signature, razorpay_payment_id, razorpay_subscription_id } =
+      req.body;
+    const user = await User.findById(req.user._id);
+  
+    const subscription_id = user.subscription.id;
+  
+    const generated_signature = crypto
+      .createHmac("sha256", process.env.RAZORPAY_SECRET)
+      .update(razorpay_payment_id + "|" + subscription_id, "utf-8")
+      .digest("hex");
+      
 
-    const { razorpay_signature, razorpay_payment_id, razorpay_subscription_id } = req.body
-
-    const user = await User.findById(req.user._id)
-
-    const subscription_id = user.subscription.id
-
-    const generated_signature = crypto.
-        createHash("sha256", process.env.RAZORPAY_SECRET).
-        update(razorpay_payment_id + "|" + subscription_id, "utf-8").
-        digest("hex")
-
-    const isAuthentic = generated_signature === razorpay_signature
-
-    if(!isAuthentic) return res.redirect(`${process.env.FRONTEND_URL}/paymentfail`)
-
-    //database comes here
+    const isAuthentic = generated_signature === razorpay_signature;
+    console.log(generated_signature)
+    
+    if (!isAuthentic)
+      return res.redirect(`${process.env.FRONTEND_URL}/paymentfail`);
+    console.log(isAuthentic)
+    // database comes here
     await Payment.create({
-        razorpay_signature,
-        razorpay_payment_id,
-        razorpay_subscription_id,
-    })
-
-    user.subscription.status = "active"
-
-    await user.save()
-
-    res.redirect(`${process.env.FRONTEND_URL}/paymentsuccess?referece=${razorpay_payment_id}`)
-})
+      razorpay_signature,
+      razorpay_payment_id,
+      razorpay_subscription_id,
+    });
+  
+    user.subscription.status = "active";
+  
+    await user.save();
+  
+    res.redirect(
+      `${process.env.FRONTEND_URL}/paymentsuccess?reference=${razorpay_payment_id}`
+    );
+  });
 
 export const getRazorpayKey = catchAsyncError(async(req, res, next)=>{
     

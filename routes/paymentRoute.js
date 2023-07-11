@@ -10,7 +10,7 @@ router.route("/subscribe").get(isAuthenticated, buySubscription)
 //verify payment
 router.route("/paymentverification").post(isAuthenticated, paymentVerification) 
 
-//Verify payment and save reference in database
+//Verify payment and save reference in dat  abase
 router.route("/razorpaykey").get(getRazorpayKey)
 
 //Cancel Subscription
