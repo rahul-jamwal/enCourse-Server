@@ -1,5 +1,5 @@
 import express, { Router } from "express"
-import { buySubscription, cancelSubscription, getRazorpayKey } from "../controllers/paymentController.js";
+import { buySubscription, cancelSubscription, getRazorpayKey, paymentVerification } from "../controllers/paymentController.js";
 import { authorizeAdmin, isAuthenticated } from "../middlewares/auth.js";
 
 const router = express.Router();
@@ -8,7 +8,7 @@ const router = express.Router();
 router.route("/subscribe").get(isAuthenticated, buySubscription)
 
 //verify payment
-router.route("/paymentverification").post(isAuthenticated, buySubscription) 
+router.route("/paymentverification").post(isAuthenticated, paymentVerification) 
 
 //Verify payment and save reference in database
 router.route("/razorpaykey").get(getRazorpayKey)
