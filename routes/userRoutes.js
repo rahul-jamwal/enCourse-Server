@@ -32,7 +32,7 @@ router.route("/removefromplaylist").delete(isAuthenticated, removeFromPlaylist)
 
 
 //Admin routes
-router.route("/admin/user").get(isAuthenticated, authorizeAdmin, getAllUsers)
+router.route("/admin/users").get(isAuthenticated, authorizeAdmin, getAllUsers)
 router.route("/admin/user/:id").put(isAuthenticated, authorizeAdmin, updateUserRole).delete(isAuthenticated, authorizeAdmin, deleteUser)
 
-export default router; 
+export default router;

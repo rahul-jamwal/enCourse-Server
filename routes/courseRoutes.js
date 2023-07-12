@@ -21,10 +21,9 @@ router.
         get(isAuthenticated, authorizeSubscribers, getCourseLectures).
         post(isAuthenticated, authorizeAdmin, singleUpload, addLectures).
         delete(isAuthenticated, authorizeAdmin, deleteCourse)
-
 //delete Lecture
 router.
-    route("lecture").
+    route("/lecture").
         delete(isAuthenticated, authorizeAdmin, deleteLecture)
 
 export default router;
